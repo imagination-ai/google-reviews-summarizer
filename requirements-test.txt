@@ -1,0 +1,5 @@
+flake8
+black==22.6.0
+isort
+pytest
+pytest-mock
