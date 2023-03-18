@@ -1,5 +1,8 @@
 .PHONY: install install-dev install-test build-*
+
+ENV ?= .venv
 RUN = . $(ENV)/bin/activate &&
+
 
 .venv:
 	virtualenv $(ENV) --python=python3.11
