@@ -1,0 +1,24 @@
+version: "3.11"
+services:
+
+  summarizer:
+    build:
+      dockerfile: Dockerfile
+    image: summarizer
+    command: sleep 3600
+    volumes:
+      - ./summarizer:/applications/summarizer
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+    restart: "no"
+    environment:
+      Google_Reviews_API_KEY: ${GOOGLE_REVIEWS_API_KEY}
+      OpenAI_API_KEY: ${OPENAI_API_KEY}
+
+networks:
+  backend:
+
+volumes:
+  db-data: { }
