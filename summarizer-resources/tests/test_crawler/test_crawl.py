@@ -1,17 +1,12 @@
-from summarizer.crawler import crawl
-
-import json
-import os
 from summarizer.crawler.crawl import CLIENT, merge_all_reviews
-from summarizer.crawler.crawl import google_api_reviews_crawler
-from summarizer.crawler.crawl import convert_google_reviews_format_to_records
 
+# from summarizer.crawler.crawl import google_api_reviews_crawler
+from summarizer.crawler.crawl import convert_google_reviews_format_to_records
 from summarizer.crawler.crawl import GooglePlaceRevivewRecord
 
 
 # def test_crawl():
 # x = google_api_reviews_crawler('Saint Frank Coffee', CLIENT)
-# I need to put sleep time for the test or mock.
 # TODO: But either way I should put some sleeping time to actual function.
 
 

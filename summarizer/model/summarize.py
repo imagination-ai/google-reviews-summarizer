@@ -7,22 +7,9 @@ openai.ORGANIZATION = "org-QnHenZwFez78ZbPcGeF5CFs2"
 
 
 class SummarizeType(Enum):
-    ALL = "all"
-    POSITIVE = "positive"
-    NEGATIVE = "negative"
-
-
-def define_prompt(sum_type: SummarizeType):
-    if sum_type == SummarizeType.ALL:
-        return "Summarize these reviews:"
-    elif sum_type == SummarizeType.POSITIVE:
-        return (
-            "Summarize the these reviews only using positive statements only:"
-        )
-    elif sum_type == SummarizeType.NEGATIVE:
-        return (
-            "Summarize the these reviews only using negative statements only:"
-        )
+    ALL = "Summarize following reviews within one or two paragraphs:"
+    POSITIVE = "Summarize the positive statements in the following reviews and turn into bullet points:"
+    NEGATIVE = "Summarize the negative statements in the following reviews and turn into bullet points:"
 
 
 def summarize_reviews(
@@ -38,7 +25,7 @@ def summarize_reviews(
 
     summary = openai.Completion.create(
         model=model,
-        prompt=f"{define_prompt(sum_type)}\n\n{merged_reviews}",
+        prompt=f"{sum_type.value}\n\n{merged_reviews}",
         temperature=temperature,
         max_tokens=max_tokens,
         top_p=top_p,
@@ -46,4 +33,4 @@ def summarize_reviews(
         presence_penalty=presence_penalty,
     )
 
-    return summary
+    return summary["choices"][0]["text"]
