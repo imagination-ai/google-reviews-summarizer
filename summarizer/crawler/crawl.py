@@ -76,6 +76,7 @@ def google_api_reviews_crawler(query, google_client):
 
     """
     query_output = google_client.places(query)
-    first_place = google_client.place(query_output["results"][0]["place_id"])
+    place_id = query_output["results"][0]["place_id"]
+    first_place = google_client.place(place_id)
     reviews_raw = first_place["result"]["reviews"]
     return reviews_raw  # I'll modify the return.
