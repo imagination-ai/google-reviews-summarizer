@@ -23,7 +23,7 @@ clean:
 
 test:
 	export ENVIRONMENT=test
-	TEST_DIR='.' PYTHONPATH=$(PWD) pytest summarizer-resources/tests
+	TEST_DIR='.' PYTHONPATH=$(PWD) pytest summarizer_resources/tests
 
 format:
 	 $(RUN) black -t py39 -l 80 $$(find summarizer* -name "*.py")

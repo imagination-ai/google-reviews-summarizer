@@ -1,5 +1,4 @@
 FROM python:3.11
-#docker pull python:3.11
 
 # Create the directories
 RUN mkdir -p /build/test
@@ -26,7 +25,7 @@ ENV PYTHONPATH /applications
 
 ##### 1. Leaf Image: summarizer #####
 COPY summarizer /applications/summarizer
-COPY summarizer-resources /applications/summarizer-resources
+COPY summarizer_resources /applications/summarizer_resources
 
 # Make port 8080 available to the world outside this container
 EXPOSE 8080

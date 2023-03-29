@@ -4,7 +4,7 @@ from dataclasses import dataclass
 import json
 
 GOOGLE_REVIEWS_API_KEY = os.environ["GOOGLE_REVIEWS_API_KEY"]
-CLIENT = googlemaps.Client(key=GOOGLE_REVIEWS_API_KEY)
+GOOGLE_REVIEWS_CLIENT = googlemaps.Client(key=GOOGLE_REVIEWS_API_KEY)
 
 
 @dataclass
@@ -29,6 +29,11 @@ class OutScrapperReviewRecord(CommonReviewRecord):
     google_id: str
     review_likes: int
     review_timestamp: str
+
+
+@dataclass
+class InHouseReviewRecord(CommonReviewRecord):
+    pass
 
 
 def convert_google_reviews_format_to_records(filepath):
