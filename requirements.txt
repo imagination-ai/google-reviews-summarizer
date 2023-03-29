@@ -6,3 +6,6 @@ selenium
 parsel
 google-services-api
 openai
+fastapi
+uvicorn
+pydantic

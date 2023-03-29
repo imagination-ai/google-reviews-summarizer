@@ -13,16 +13,16 @@ class SummarizeType(Enum):
 
 
 def summarize_reviews(
+    *,
     sum_type: SummarizeType,
     merged_reviews: str,
-    model="text-davinci-003",
-    temperature=0.7,
-    max_tokens=256,
-    top_p=1,
-    frequency_penalty=0,
-    presence_penalty=0,
+    model: str,
+    temperature: float,
+    max_tokens: int,
+    top_p: float,
+    frequency_penalty: float,
+    presence_penalty: float,
 ):
-
     summary = openai.Completion.create(
         model=model,
         prompt=f"{sum_type.value}\n\n{merged_reviews}",

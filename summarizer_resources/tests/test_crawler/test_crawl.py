@@ -71,7 +71,7 @@ def test_google_api_reviews_crawler(mock_google_client, reviews_output):
 
 def test_convert_google_reviews_format_to_records():
     review_records = convert_google_reviews_format_to_records(
-        "summarizer-resources/tests/test_data/reviews.json"
+        "summarizer_resources/tests/test_data/reviews.json"
     )
     assert len(review_records) == 5
     assert all(
@@ -85,7 +85,7 @@ def test_merge_all_reviews():
     bigger than the sum of the length of each review.
     """
     review_records = convert_google_reviews_format_to_records(
-        "summarizer-resources/tests/test_data/reviews.json"
+        "summarizer_resources/tests/test_data/reviews.json"
     )
     all_reviews = merge_all_reviews(review_records)
     length_of_the_all_reviews = sum(

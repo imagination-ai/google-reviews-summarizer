@@ -5,7 +5,7 @@ repos:
     -   id: flake8
         args:
           - summarizer
-          - summarizer-resources/tests
+          - summarizer_resources/tests
 #-   repo: https://github.com/pycqa/isort
     #rev: 5.9.2
     #hooks:
