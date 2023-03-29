@@ -20,37 +20,32 @@ def configure_logging():
                 "class": "logging.StreamHandler",
                 "stream": "ext://sys.stdout",  # Default is stderr
             },
-        },
-        "loggers": {
-            "common": {
-                "handlers": ["default"],
-                "level": "INFO",
-                "propagate": True,
-            },
-            "inflation": {
-                "handlers": ["default"],
-                "level": "INFO",
-                "propagate": True,
-            },
-            "style": {
-                "handlers": ["default"],
-                "level": "INFO",
-                "propagate": True,
-            },
-            "uvicorn": {
-                "handlers": ["default"],
-                "level": "INFO",
-                "propagate": True,
-            },
-            "gunicorn": {
-                "handlers": ["default"],
-                "level": "INFO",
-                "propagate": True,
-            },
-            "__main__": {
-                "handlers": ["default"],
-                "level": "INFO",
-                "propagate": True,
+            "loggers": {
+                "common": {
+                    "handlers": ["default"],
+                    "level": "INFO",
+                    "propagate": True,
+                },
+                "uvicorn": {
+                    "handlers": ["default"],
+                    "level": "INFO",
+                    "propagate": True,
+                },
+                "gunicorn": {
+                    "handlers": ["default"],
+                    "level": "INFO",
+                    "propagate": True,
+                },
+                "__main__": {
+                    "handlers": ["default"],
+                    "level": "INFO",
+                    "propagate": True,
+                },
+                "summarizer": {
+                    "handlers": ["default"],
+                    "level": "INFO",
+                    "propagate": True,
+                },
             },
         },
     }

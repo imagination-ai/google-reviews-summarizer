@@ -128,6 +128,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Other stuff
- .idea
- *.DS_Store
+# other stuff
+.idea
+.*-venv
+*.DS_Store

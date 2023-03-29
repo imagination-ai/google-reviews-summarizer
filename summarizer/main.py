@@ -57,13 +57,10 @@ async def index():
 
 
 # The endpoint for Google API Crawler
-# TODO: It's not important but limit parameter should put in the backhand.
 @v1.get("/google-crawl-reviews", tags=["Google-Crawl"])
-async def fetch_reviews_with_google_api(
-    query: str, limit: int = Query(le=5, ge=1)
-):
+async def fetch_reviews_with_google_api(query: str):
     logger.info("Crawler is just starting working.")
-    return google_api_reviews_crawler(query, GOOGLE_REVIEWS_CLIENT)[:limit]
+    return google_api_reviews_crawler(query, GOOGLE_REVIEWS_CLIENT)
 
 
 # The endpoint for bring reviews summary directly
