@@ -132,3 +132,4 @@ dmypy.json
 .idea
 .*-venv
 *.DS_Store
+.env  # store environment variables such as, API Keys

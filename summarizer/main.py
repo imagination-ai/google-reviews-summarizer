@@ -1,14 +1,13 @@
 import logging
-from typing import Literal
-from typing import Optional, List, Any
 
 from fastapi import FastAPI, Depends, Query
 from pydantic import BaseModel
 
-from model.summarize import SummarizeType, summarize_reviews
+from summarizer.model.summarize import SummarizeType, summarize_reviews
 from summarizer.crawler.crawl import GOOGLE_REVIEWS_CLIENT
 from summarizer.crawler.crawl import google_api_reviews_crawler
-from summarizer_resources.utils.customized_logging import configure_logging
+from summarizer.utils.customized_logging import configure_logging
+from summarizer.config import settings
 
 configure_logging()
 logger = logging.getLogger(__name__)
@@ -69,7 +68,7 @@ async def summarize_this_reviews_via_openai(parameters: CrawlArgs = Depends()):
     return summarize_reviews(**parameters.dict())
 
 
-app.mount("/api/v1", v1)
+app.mount(settings.API_BASE_URL, v1)
 
 if __name__ == "__main__":
     import uvicorn
@@ -77,8 +76,8 @@ if __name__ == "__main__":
     logger.warning("Friendly Warning: Local Development...")
     uvicorn.run(
         "summarizer.main:app",
-        host="localhost",
-        port=8000,
+        host=settings.APP_HOST,
+        port=settings.APP_PORT,
         reload=True,
         workers=1,
     )
