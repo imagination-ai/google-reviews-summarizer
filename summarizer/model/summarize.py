@@ -1,6 +1,12 @@
 import os
 import openai
 from enum import Enum
+from crawler.crawl import (
+    GOOGLE_REVIEWS_CLIENT,
+    google_api_reviews_crawler,
+    merge_all_reviews,
+    convert_google_reviews_format_to_records,
+)
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 openai.ORGANIZATION = "org-QnHenZwFez78ZbPcGeF5CFs2"
@@ -14,8 +20,8 @@ class SummarizeType(Enum):
 
 def summarize_reviews(
     *,
+    query: str,
     sum_type: SummarizeType,
-    merged_reviews: str,
     model: str,
     temperature: float,
     max_tokens: int,
@@ -23,6 +29,12 @@ def summarize_reviews(
     frequency_penalty: float,
     presence_penalty: float,
 ):
+    crawled_reviews = google_api_reviews_crawler(
+        query=query, google_client=GOOGLE_REVIEWS_CLIENT
+    )
+    merged_reviews = merge_all_reviews(
+        convert_google_reviews_format_to_records(crawled_reviews)
+    )
     summary = openai.Completion.create(
         model=model,
         prompt=f"{sum_type.value}\n\n{merged_reviews}",

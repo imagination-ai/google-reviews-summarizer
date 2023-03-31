@@ -36,12 +36,25 @@ class InHouseReviewRecord(CommonReviewRecord):
     pass
 
 
-def convert_google_reviews_format_to_records(filepath):
+def is_filepath(string_or_list):
+    given_type = type(string_or_list)
+    if given_type == str:
+        return True
+    elif given_type == list:
+        return False
+    else:
+        raise TypeError("a JSON filepath or a list should be given")
+
+
+def convert_google_reviews_format_to_records(string_or_list_object):
     """
     It returns a list of ReviewRecord objects.
     """
-    with open(filepath, "r") as f:
-        data = json.load(f)
+    data = string_or_list_object
+
+    if is_filepath(string_or_list_object):
+        with open(string_or_list_object, "r") as f:
+            data = json.load(f)
     review_records = []
     for d in data:
         review_records.append(
@@ -84,4 +97,4 @@ def google_api_reviews_crawler(query, google_client):
     place_id = query_output["results"][0]["place_id"]
     first_place = google_client.place(place_id)
     reviews_raw = first_place["result"]["reviews"]
-    return reviews_raw  # I'll modify the return.
+    return reviews_raw
