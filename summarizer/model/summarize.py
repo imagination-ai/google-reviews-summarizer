@@ -1,7 +1,7 @@
 import os
 import openai
 from enum import Enum
-from crawler.crawl import (
+from summarizer.crawler.crawl import (
     GOOGLE_REVIEWS_CLIENT,
     google_api_reviews_crawler,
     merge_all_reviews,
