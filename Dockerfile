@@ -27,5 +27,7 @@ ENV PYTHONPATH /applications
 COPY summarizer /applications/summarizer
 COPY summarizer_resources /applications/summarizer_resources
 
-# Make port 8080 available to the world outside this container
-EXPOSE 8080
+# Make port 8000 available to the world outside this container
+EXPOSE 8000
+COPY entrypoints/summarizer-app-entrypoint.sh /applications/summarizer-app-entrypoint.sh
+ENTRYPOINT ["sh", "/applications/summarizer-app-entrypoint.sh"]

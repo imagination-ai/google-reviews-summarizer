@@ -9,13 +9,11 @@ services:
     volumes:
       - ./summarizer:/applications/summarizer
     ports:
-      - "8080:8080"
+      - "8000:8000"
     networks:
       - backend
     restart: "no"
-    environment:
-      Google_Reviews_API_KEY: ${GOOGLE_REVIEWS_API_KEY}
-      OpenAI_API_KEY: ${OPENAI_API_KEY}
+    env_file: .env
 
 networks:
   backend:
