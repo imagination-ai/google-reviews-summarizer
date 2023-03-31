@@ -64,8 +64,10 @@ async def fetch_reviews_with_google_api(query: str):
 
 # The endpoint for bring reviews summary directly
 @v1.get("/openai-summarizer", tags=["Summarizer"])
-async def summarize_this_reviews_via_openai(parameters: CrawlArgs = Depends()):
-    return summarize_reviews(**parameters.dict())
+async def summarize_this_reviews_via_openai(
+    query: str, parameters: CrawlArgs = Depends()
+):
+    return summarize_reviews(query=query, **parameters.dict())
 
 
 app.mount(settings.API_BASE_URL, v1)
