@@ -18,16 +18,12 @@ v1 = FastAPI()
 tags_metadata = [
     {"name": "Index", "description": "Index page for the project"},
     {
-        "name": "Google-Crawl",
+        "name": "Fetch Google Reviews",
         "description": "Google API Crawler that I use in the project",
         "externalDocs": {
             "description": "The doc of Google API",
             "url": "https://developers.google.com/maps/documentation/places/web-service/details",
         },
-    },
-    {
-        "name": "OpenAI-Summarizer",
-        "description": "A simple summarizer that uses OPENAI API",
     },
     {
         "name": "Summarizer",
@@ -56,15 +52,15 @@ async def index():
 
 
 # The endpoint for Google API Crawler
-@v1.get("/google-crawl-reviews", tags=["Google-Crawl"])
-async def fetch_reviews_with_google_api(query: str):
+@v1.get("/Fetch-Google-Reviews", tags=["Fetch Google Reviews"])
+async def fetch_google_reviews(query: str):
     logger.info("Crawler is just starting working.")
     return google_api_reviews_crawler(query, GOOGLE_REVIEWS_CLIENT)
 
 
 # The endpoint for bring reviews summary directly
-@v1.get("/openai-summarizer", tags=["Summarizer"])
-async def summarize_this_reviews_via_openai(
+@v1.get("/Summarizer", tags=["Summarizer"])
+async def summarize_place_reviews(
     query: str, parameters: CrawlArgs = Depends()
 ):
     return summarize_reviews(query=query, **parameters.dict())
