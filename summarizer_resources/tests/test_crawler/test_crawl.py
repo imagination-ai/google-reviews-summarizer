@@ -1,8 +1,8 @@
 import pytest
+import mock
+from summarizer.crawler.crawl import merge_all_reviews, get_photo_link
 
-from summarizer.crawler.crawl import merge_all_reviews
-
-from summarizer.crawler.crawl import google_api_reviews_crawler
+from summarizer.crawler.crawl import get_place_reviews
 from summarizer.crawler.crawl import convert_google_reviews_format_to_records
 from summarizer.crawler.crawl import GooglePlaceRevivewRecord
 
@@ -28,45 +28,15 @@ def reviews_output():
     }
 
 
-@pytest.fixture(scope="module")
-def mock_google_client(reviews_output):
-    """Mock Google API client object for testing"""
-
-    class MockClient:
-        def __init__(self, mock_key):
-            self.mock_key = mock_key
-
-        def places(self, query):
-            return query_output
-
-        def place(self, place_id):
-            return reviews_output
-
-    # Mock places output
-    query_output = {
-        "html_attributions": [],
-        "results": [
-            {
-                "business_status": "OPERATIONAL",
-                "place_id": "ChIJlzvceNUadmsmK26khe0U",
-            }
-        ],
-        "status": "OK",
-    }
-
-    return MockClient("Mock-Key")
-
-
-def test_google_api_reviews_crawler(mock_google_client, reviews_output):
+@mock.patch("summarizer.crawler.crawl.get_place_all_info_from_google_api")
+def test_get_place_reviews(mock_get_place_reviews, reviews_output):
     """
     Test condition: If the google-api returns correctly.
     Place method returns at least one place.
     """
-    expected_output = reviews_output["result"]["reviews"]
-    assert (
-        google_api_reviews_crawler("Saint Frank Coffee", mock_google_client)
-        == expected_output
-    )
+    mock_get_place_reviews.return_value = reviews_output
+    result = get_place_reviews("Saint Frank Coffee")
+    assert result == reviews_output["result"]["reviews"]
 
 
 def test_convert_google_reviews_format_to_records():
@@ -92,3 +62,12 @@ def test_merge_all_reviews():
         [len(record.review_text) for record in review_records]
     )
     assert len(all_reviews) >= length_of_the_all_reviews
+
+
+@mock.patch("summarizer.crawler.crawl.requests.get")
+def test_get_photo_link_success_case(mock_requests_get):
+    mock_requests_get.return_value = mock.Mock(
+        status_code=200, url="mock-test-url"
+    )
+    actual_url = get_photo_link("test-url")
+    assert actual_url == "mock-test-url"

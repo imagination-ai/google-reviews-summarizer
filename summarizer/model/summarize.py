@@ -2,10 +2,9 @@ import os
 import openai
 from enum import Enum
 from summarizer.crawler.crawl import (
-    GOOGLE_REVIEWS_CLIENT,
-    google_api_reviews_crawler,
     merge_all_reviews,
     convert_google_reviews_format_to_records,
+    get_place_reviews,
 )
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -29,9 +28,7 @@ def summarize_reviews(
     frequency_penalty: float,
     presence_penalty: float,
 ):
-    crawled_reviews = google_api_reviews_crawler(
-        query=query, google_client=GOOGLE_REVIEWS_CLIENT
-    )
+    crawled_reviews = get_place_reviews(query=query)
     merged_reviews = merge_all_reviews(
         convert_google_reviews_format_to_records(crawled_reviews)
     )
