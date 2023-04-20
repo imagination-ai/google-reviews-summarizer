@@ -4,8 +4,8 @@ from fastapi import FastAPI, Depends, Query
 from pydantic import BaseModel
 
 from summarizer.model.summarize import SummarizeType, summarize_reviews
-from summarizer.crawler.crawl import GOOGLE_REVIEWS_CLIENT
-from summarizer.crawler.crawl import google_api_reviews_crawler
+
+from summarizer.crawler.crawl import get_place_general_information
 from summarizer.utils.customized_logging import configure_logging
 from summarizer.config import settings
 
@@ -52,18 +52,19 @@ async def index():
 
 
 # The endpoint for Google API Crawler
-@v1.get("/Fetch-Google-Reviews", tags=["Fetch Google Reviews"])
-async def fetch_google_reviews(query: str):
+@v1.get("/Places/{place_name}", tags=["Fetch Google Reviews"])
+async def get_general_place_information(place_name):
     logger.info("Crawler is just starting working.")
-    return google_api_reviews_crawler(query, GOOGLE_REVIEWS_CLIENT)
+    general_information = get_place_general_information(place_name)
+    return general_information
 
 
 # The endpoint for bring reviews summary directly
-@v1.get("/Summarizer", tags=["Summarizer"])
+@v1.get("Summaries/{place_name}", tags=["Summarizer"])
 async def summarize_place_reviews(
-    query: str, parameters: CrawlArgs = Depends()
+    place_name: str, parameters: CrawlArgs = Depends()
 ):
-    return summarize_reviews(query=query, **parameters.dict())
+    return summarize_reviews(query=place_name, **parameters.dict())
 
 
 app.mount(settings.API_BASE_URL, v1)

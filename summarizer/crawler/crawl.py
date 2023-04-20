@@ -2,9 +2,21 @@ import googlemaps
 import os
 from dataclasses import dataclass
 import json
+import requests
+from functools import lru_cache
 
 GOOGLE_REVIEWS_API_KEY = os.environ["GOOGLE_REVIEWS_API_KEY"]
 GOOGLE_REVIEWS_CLIENT = googlemaps.Client(key=GOOGLE_REVIEWS_API_KEY)
+
+
+@dataclass
+class PlaceGeneralRecords:
+    average_rating: float
+    price_level: str
+    place_type: str
+    photo_reference: str
+    wheelchair_accessible_entrance: str
+    website: str
 
 
 @dataclass
@@ -34,6 +46,21 @@ class OutScrapperReviewRecord(CommonReviewRecord):
 @dataclass
 class InHouseReviewRecord(CommonReviewRecord):
     pass
+
+
+def get_photo_link(
+    photo_reference,
+    max_height=800,
+    max_width=600,
+    google_api_key=GOOGLE_REVIEWS_API_KEY,
+):
+    _ = "https://maps.googleapis.com/maps/api/place/photo?"
+    query = f"{_}maxheight={max_height}&maxwidth={max_width}&photoreference={photo_reference}&key={google_api_key}"
+    r = requests.get(query)
+    if r.status_code == 200:
+        return r.url
+    else:
+        print(f"Critical Error in get_photo_link function:{r.status_code}")
 
 
 def is_filepath(string_or_list):
@@ -79,7 +106,15 @@ def merge_all_reviews(review_records):
     return "\n".join(map(lambda record: record.review_text, review_records))
 
 
-def google_api_reviews_crawler(query, google_client):
+@lru_cache
+def get_place_all_info_from_google_api(query):
+    query_output = GOOGLE_REVIEWS_CLIENT.places(query)
+    place_id = query_output["results"][0]["place_id"]
+    first_place = GOOGLE_REVIEWS_CLIENT.place(place_id)
+    return first_place
+
+
+def get_place_reviews(query):
     """
     The function takes a place name and returns five random reviews.
     If there are multiple places with same results it takes the first place
@@ -87,14 +122,42 @@ def google_api_reviews_crawler(query, google_client):
 
     This function is using Google's API.
     Args:
-        query:
-        google_client:
 
     Returns:
 
     """
-    query_output = google_client.places(query)
-    place_id = query_output["results"][0]["place_id"]
-    first_place = google_client.place(place_id)
-    reviews_raw = first_place["result"]["reviews"]
+    first_place = get_place_all_info_from_google_api(query)
+    result = first_place["result"]
+    reviews_raw = result["reviews"]
     return reviews_raw
+
+
+def get_place_general_information(query):
+    # general information about place (e.g., price level)
+
+    first_place = get_place_all_info_from_google_api(query)
+    result = first_place["result"]
+    average_rating = result["rating"]
+    price_level = result["price_level"] * "$"
+    place_type = result["types"][0].replace("_", " ").title()
+    photo_reference = result["photos"][0]["photo_reference"]
+
+    if result["wheelchair_accessible_entrance"] is True:
+        wheelchair_accessible_entrance = "Wheelchair accessible"
+    else:
+        wheelchair_accessible_entrance = "NA"
+
+    if result["website"]:
+        website = result["website"]
+    else:
+        website = "NA"
+
+    general_records = PlaceGeneralRecords(
+        average_rating,
+        price_level,
+        place_type,
+        photo_reference,
+        wheelchair_accessible_entrance,
+        website,
+    )
+    return general_records
